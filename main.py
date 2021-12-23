@@ -1,11 +1,17 @@
 import pandas as pd
 from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
 import calendar
-from python_enviar_sms.sms_auth_token import *
 
-account_sid = account_sid()
-auth_token = auth_token()
+import python_enviar_sms.sms_auth_token
+
+
+account_sid = python_enviar_sms.sms_auth_token.account_sid()
+auth_token = python_enviar_sms.sms_auth_token.auth_token()
 client = Client(account_sid, auth_token)
+
+print(account_sid)
+print(auth_token)
 
 month_list = []
 for month_idx in range(1, 7):
@@ -25,8 +31,11 @@ for month in month_list:
         vendedor = monthlyData.loc[monthlyData['Vendas'] >= 55000, 'Vendedor'].values[0]
         vendas = monthlyData.loc[monthlyData['Vendas'] >= 55000, 'Vendas'].values[0]
         print(f'No mês {month} , {vendedor} bateu as metas com R$: {vendas}')
-        message = client.messages.create(
+        try:
+            message = client.messages.create(
             to="+5548999209186",
             from_="+12543454332",
             body=f'No mês {month} , {vendedor} bateu as metas com R$: {vendas}')
-        print(message.sid)
+            print(message.sid)
+        except TwilioRestException as err:
+            print(err)

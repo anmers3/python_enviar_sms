@@ -3,11 +3,12 @@ from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
 import calendar
 
-import python_enviar_sms.sms_auth_token
+import python_enviar_sms.credentials
 
 
-account_sid = python_enviar_sms.sms_auth_token.account_sid()
-auth_token = python_enviar_sms.sms_auth_token.auth_token()
+account_sid = python_enviar_sms.credentials.account_sid()
+auth_token = python_enviar_sms.credentials.auth_token()
+phone_nun = python_enviar_sms.credentials.phone_num()
 client = Client(account_sid, auth_token)
 
 print(account_sid)
@@ -33,7 +34,7 @@ for month in month_list:
         print(f'No mês {month} , {vendedor} bateu as metas com R$: {vendas}')
         try:
             message = client.messages.create(
-            to="+5548999209186",
+            to=phone_nun,
             from_="+12543454332",
             body=f'No mês {month} , {vendedor} bateu as metas com R$: {vendas}')
             print(message.sid)
